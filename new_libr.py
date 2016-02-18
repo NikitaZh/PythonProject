@@ -9,6 +9,8 @@ proper_tweets = []
 rtchecker = re.compile('[@|https]')
 hashtagshecker = re.compile('#')
 
+file = open('written.txt', 'w', encoding='utf-8')
+
 ids = []
 api = TwitterAPI(consumer_key, consumer_secret, access_token_key, access_token_secret)
 aps = api.request('search/tweets', {'q': '#сарказм', 'until': '2016-02-04', 'count': 100})
@@ -17,8 +19,9 @@ for item in aps.get_iterator():
         m1 = rtchecker.search(item['text'])
         if m1 is None:
             m2 = hashtagshecker.findall(item['text'])
-            if len(m2) > 2:
+            if len(m2) < 3:
                 proper_tweets.append(item['text'])
+                file.write(item['text']+'\n')
 
 k = min(ids)-1
 print('k is ', k)
@@ -36,6 +39,7 @@ while k is not None and len(proper_tweets) <100:
             m4 = hashtagshecker.findall(item1['text'])
             if len(m4) > 2:
                 proper_tweets.append(item1['text'])
+                file.write(item1['text']+'\n')
 
 """
     print('k is ', k)
@@ -45,8 +49,6 @@ while k is not None and len(proper_tweets) <100:
         k = min(ids)-1
     ids = []"""
 
-
-print(proper_tweets[:10])
 
 
 
